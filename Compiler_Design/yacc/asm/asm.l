@@ -8,7 +8,9 @@
 %}
 
 NUMBER [0-9]+
-LETTER [a-zA-Z_][a-zA-Z0-9_]*
+LETTER [a-z]
+NAME [a-zA-Z_][a-zA-Z0-9_]*
+/* single letter variable names to simplify registers */
 
 %%
 
@@ -19,9 +21,14 @@ LETTER [a-zA-Z_][a-zA-Z0-9_]*
 }
 
 {LETTER} {
-	yylval.tag = SYM_NAME;
-	yylval.content.name = strdup(yytext);
+	yylval.tag = SYM_CHAR;
+	yylval.content.ch = yytext[0];
 	return LETTER;
+}
+
+{NAME} {
+	printf("Multi letter variable names not allowed.\n");
+	exit(1);
 }
 
 [ \t\n] ;

@@ -12,6 +12,9 @@
 
 	void print_sym(Symbol sym, const char *suffix);
 
+	// register names table
+	char reg[128] = {0};
+
 	Symbol AddToTable(Symbol,Symbol,char *);
 	Symbol AddLoad(Symbol);
 	Symbol AddStore(Symbol, Symbol);
@@ -36,7 +39,8 @@
 %}
 
 %token LETTER NUMBER
-%left '-' '+' '*' '/'
+%left '-' '+'
+%left '*' '/'
 
 %%
 
@@ -64,10 +68,10 @@ expr:
 	| NUMBER { $$ = $1; }
 	| LETTER {
 		$$ = $1;
-		Symbol alloc_reg = AddLoad($1);
-		char *s = $1.content.name;
-		s[0] = alloc_reg.content.ch;
-		s[1] = '\0';
+		if (reg[$1.content.ch] == 0) {
+			Symbol alloc_reg = AddLoad($1);
+			reg[$1.content.ch] = alloc_reg.content.ch;
+		}
 	}
 	;
 %%
@@ -124,9 +128,6 @@ void print_sym(Symbol s, const char *suffix) {
 	switch(s.tag) {
 		case SYM_NUMBER:
 			printf("%d", s.content.number);
-			break;
-		case SYM_NAME:
-			printf("%s", s.content.name);
 			break;
 		case SYM_CHAR:
 			printf("%c", s.content.ch);
