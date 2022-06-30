@@ -29,7 +29,8 @@
 %}
 
 %token LETTER NUMBER
-%left '-' '+' '*' '/'
+%left '-' '+'
+%left '*' '/'
 
 %%
 
