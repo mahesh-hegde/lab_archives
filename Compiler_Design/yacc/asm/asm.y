@@ -19,6 +19,8 @@
 	Symbol AddLoad(Symbol);
 	Symbol AddStore(Symbol, Symbol);
 
+	void printAssemblyCode();
+
 	int yylex();
 	void yyerror(const char *s) {
 		puts(s);
@@ -30,11 +32,10 @@
 
 	typedef struct instr {
 		char *opr;
+		char target;
 		Symbol opd1;
 		Symbol opd2;
 	} Instr;
-
-	void printInstr(Instr);
 
 %}
 
@@ -91,18 +92,7 @@ Symbol AddToTable(Symbol opd1, Symbol opd2, char *opr){
 	code[ind].opr=opr;
 	code[ind].opd1=opd1;
 	code[ind].opd2=opd2;
-	// print instructions as they are added
-	// no need to call ThreeAddressCode separately.
-	// This allows us to overwrite contents of symbol.name
-	// and save it as a register name.
-	// (Register names are A-Z)
-	printf("%s\t", opr);
-	if (opr != store_opr)
-		printf("%c\t", temp);
-	print_sym(opd1, "\t");
-	if (opr != load_opr)
-		print_sym(opd2, "");
-	printf("\n");
+	code[ind].target = temp;
 	ind++;
 	res.tag = SYM_CHAR;
 	res.content.ch = temp;
@@ -119,9 +109,19 @@ Symbol AddLoad(Symbol opd) {
 	return AddToTable(opd, extra, (char *)load_opr);
 }
 
-void printInstr(Instr i) {
-	printf("%s\t", i.opr);
-	print_sym(i.opd2, "\n");
+void printAssemblyCode() {
+	for(int i = 0; i < ind; i++) {
+		Instr inst = code[i];
+		printf("%s\t", inst.opr);
+		if (inst.opr != store_opr) {
+			printf("%c\t", code[i].target);
+		}
+		print_sym(inst.opd1, "\t");
+		if (inst.opr != load_opr) {
+			print_sym(inst.opd2, "");
+		}
+		printf("\n");
+	}
 }
 
 void print_sym(Symbol s, const char *suffix) {
@@ -139,5 +139,6 @@ void print_sym(Symbol s, const char *suffix) {
 int main(){
 	printf("\nEnter the Expression: ");
 	yyparse();
+	printAssemblyCode();
 }
 
