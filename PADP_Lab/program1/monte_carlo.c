@@ -5,6 +5,7 @@
 #include <omp.h>
 
 const int minIter = 1000;
+
 const int maxIter = minIter * 1000;
 
 double compute(int nIter) {

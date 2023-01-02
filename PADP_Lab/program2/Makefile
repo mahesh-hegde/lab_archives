@@ -1,8 +1,8 @@
-PROGRAM := monte_carlo
+PROGRAM := matmul
 
 run: $(PROGRAM).out
 	./$(PROGRAM).out
 
-$(PROGRAM).out: $(PROGRAM).c
+matmul.out: $(PROGRAM).c
 	gcc -fopenmp -o $(PROGRAM).out $(PROGRAM).c
 
