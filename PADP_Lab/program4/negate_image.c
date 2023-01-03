@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 	for (int x = 0; x < w; x++) {
 		for (int y = 0; y < h; y++) {
 			int color = gdImageGetPixel(img, x, y);
-			int avgColor = (gdImageRed(img, color) + gdImageGreen(img, color) 
+			int avgColor = 255 - (gdImageRed(img, color) + gdImageGreen(img, color) 
 				+ gdImageBlue(img, color)) / 3;
 			int allocColor = gdImageColorAllocate(img, avgColor, avgColor, avgColor);
 			#pragma omp critical
