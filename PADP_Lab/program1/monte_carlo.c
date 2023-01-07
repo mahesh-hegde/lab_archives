@@ -20,7 +20,9 @@ double compute(int nIter) {
 	#pragma omp parallel
 	{
 	int localCount = 0;
-	unsigned int randomState = 9231028;
+	// This is the seed value for rand_r function.
+	// (should actually use something better here than clock)
+	unsigned int randomState = clock();
 	#pragma omp for
 	for (int i = 0; i < nIter; i++) {
 		x = (double)rand_r(&randomState) / RAND_MAX;
