@@ -45,6 +45,7 @@ void negate(const char *path, double *time, int printDims) {
 int main(int argc, char **argv) {
 	if (argc == 1) {
 		fprintf(stderr, "please provide arguments\n");
+		return 1;
 	}
 	printf ("%-20s%-20s%-20s%-20s%-20s\n", "Dims", "1", "2", "4", "8");
 	for (int i = 1; i < argc; i++) {
